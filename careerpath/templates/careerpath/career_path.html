@@ -1,0 +1,644 @@
+{% extends "careerpath/base.html" %}
+{% block content %}
+
+<!-- Header -->
+<header class="header">
+    <div class="header-content">
+        <div class="logo">PathSight</div>
+        <nav class="nav-links">
+            <a href="#">Paths</a>
+            <a href="#">Resources</a>
+            <a href="#">Community</a>
+        </nav>
+        <div class="header-actions">
+            <i class="fas fa-search"></i>
+            <i class="fas fa-bell"></i>
+            <div class="profile-pic"></div>
+        </div>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-left">
+            <h1>Discover Your Perfect Tech Career Path</h1>
+            <p>Take our comprehensive assessment or describe your dream job to get personalized career recommendations.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary">
+                    <span>Start Assessment</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="btn btn-secondary">
+                    <span>Describe Your Dream Job</span>
+                    <i class="fas fa-comment"></i>
+                </button>
+            </div>
+        </div>
+        <div class="hero-right">
+            <div class="feature">
+                <i class="fas fa-check"></i>
+                <span>15-minute assessment</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-chart-line"></i>
+                <span>Personalized results</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-star"></i>
+                <span>AI-powered matching</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Dream Job Description -->
+<section class="dream-job-section">
+    <div class="container">
+        <textarea class="dream-job-input" placeholder="Describe your dream job and what you'd like to do... Example: I want to work with cutting-edge technology, solve complex problems, and create innovative solutions that help people. I'm interested in AI and machine learning."></textarea>
+        <button class="btn btn-primary generate-btn">
+            <span>Generate Career Path</span>
+            <i class="fas fa-rocket"></i>
+        </button>
+    </div>
+</section>
+
+<!-- Career Paths Section -->
+<section class="career-paths">
+    <div class="container">
+        <h2>Career Paths</h2>
+        
+        <!-- Fields Grid -->
+        <div class="fields-grid">
+            {% for field in fields %}
+            <div class="field-panel">
+                <div class="field-header">
+                    <div class="field-icon">
+                        {% if field.name == "Software & Systems Development" %}
+                            <i class="fas fa-code"></i>
+                        {% elif field.name == "Data, AI & Intelligence" %}
+                            <i class="fas fa-brain"></i>
+                        {% elif field.name == "Cybersecurity & Infrastructure" %}
+                            <i class="fas fa-shield-alt"></i>
+                        {% elif field.name == "Research, Theory & Emerging Tech" %}
+                            <i class="fas fa-flask"></i>
+                        {% else %}
+                            <i class="fas fa-cog"></i>
+                        {% endif %}
+                    </div>
+                    <h3>{{ field.name }}</h3>
+                    <p class="field-focus">{{ field.focus }}</p>
+                </div>
+                
+                <div class="subfields-grid">
+                    {% for subfield in field.subfields.all %}
+                    <a href="{% url 'careerpath:subfield_detail' subfield.id %}" class="subfield-card">
+                        <div class="subfield-icon">
+                            {% if subfield.name == "Frontend Development" %}
+                                <i class="fas fa-desktop"></i>
+                            {% elif subfield.name == "Backend Development" %}
+                                <i class="fas fa-server"></i>
+                            {% elif subfield.name == "Full-Stack Development" %}
+                                <i class="fas fa-layer-group"></i>
+                            {% elif subfield.name == "Mobile App Development" %}
+                                <i class="fas fa-mobile-alt"></i>
+                            {% elif subfield.name == "DevOps & Infrastructure" %}
+                                <i class="fas fa-cloud"></i>
+                            {% elif subfield.name == "Data Science" %}
+                                <i class="fas fa-chart-bar"></i>
+                            {% elif subfield.name == "Machine Learning & AI" %}
+                                <i class="fas fa-robot"></i>
+                            {% elif subfield.name == "Data Engineering" %}
+                                <i class="fas fa-database"></i>
+                            {% elif subfield.name == "Business Intelligence (BI)" %}
+                                <i class="fas fa-chart-line"></i>
+                            {% elif subfield.name == "Natural Language Processing" %}
+                                <i class="fas fa-language"></i>
+                            {% elif subfield.name == "Cybersecurity" %}
+                                <i class="fas fa-user-shield"></i>
+                            {% elif subfield.name == "Network & Cloud Security" %}
+                                <i class="fas fa-network-wired"></i>
+                            {% elif subfield.name == "Cloud Computing & Infrastructure" %}
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            {% elif subfield.name == "Blockchain & Web3" %}
+                                <i class="fas fa-link"></i>
+                            {% elif subfield.name == "Computer Vision" %}
+                                <i class="fas fa-eye"></i>
+                            {% elif subfield.name == "Human-Computer Interaction (HCI)" %}
+                                <i class="fas fa-mouse-pointer"></i>
+                            {% elif subfield.name == "Robotics" %}
+                                <i class="fas fa-cog"></i>
+                            {% elif subfield.name == "Quantum Computing" %}
+                                <i class="fas fa-atom"></i>
+                            {% elif subfield.name == "Academia/Research" %}
+                                <i class="fas fa-graduation-cap"></i>
+                            {% else %}
+                                <i class="fas fa-cog"></i>
+                            {% endif %}
+                        </div>
+                        <h4>{{ subfield.name }}</h4>
+                        <div class="subfield-details">
+                            <div class="job-titles">
+                                <strong>Common Jobs:</strong>
+                                <ul>
+                                    {% for job in subfield.jobexample_set.all|slice:":3" %}
+                                        <li>{{ job.title }}</li>
+                                    {% empty %}
+                                        <li>Developer</li>
+                                        <li>Engineer</li>
+                                        <li>Specialist</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="skills">
+                                <strong>Key Skills:</strong>
+                                <div class="skill-tags">
+                                    {% for skill in subfield.skill_set.all|slice:":4" %}
+                                        <span class="skill-tag">{{ skill.name }}</span>
+                                    {% empty %}
+                                        <span class="skill-tag">Programming</span>
+                                        <span class="skill-tag">Problem Solving</span>
+                                        <span class="skill-tag">Communication</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>CareerPath</h4>
+                <p>Your guide to tech careers</p>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Guides</a></li>
+                    <li><a href="#">Community</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-linkedin"></i>
+                    <i class="fab fa-github"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+.header {
+    background: white;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1e40af;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #666;
+    font-weight: 500;
+}
+
+.nav-links a:hover {
+    color: #1e40af;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-actions i {
+    color: #666;
+    cursor: pointer;
+}
+
+.profile-pic {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e5e5e5;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4rem 0;
+}
+
+.hero-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    gap: 4rem;
+}
+
+.hero-left {
+    flex: 1;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.hero-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.feature i {
+    font-size: 1.2rem;
+}
+
+/* Dream Job Section */
+.dream-job-section {
+    padding: 3rem 0;
+    background: #f8fafc;
+}
+
+.dream-job-input {
+    width: 100%;
+    min-height: 120px;
+    padding: 1rem;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    font-size: 1rem;
+    resize: vertical;
+    margin-bottom: 1rem;
+}
+
+.generate-btn {
+    float: right;
+}
+
+/* Career Paths */
+.career-paths {
+    padding: 4rem 0;
+}
+
+.career-paths h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+/* Fields Grid */
+.fields-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.field-panel {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e5e5;
+}
+
+.field-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+.field-icon {
+    font-size: 3rem;
+    color: #3b82f6;
+    margin-bottom: 1rem;
+}
+
+.field-header h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.field-focus {
+    color: #6b7280;
+    font-size: 1rem;
+    font-style: italic;
+}
+
+/* Subfields Grid */
+.subfields-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.subfield-card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    border: 1px solid #e5e5e5;
+    position: relative;
+    overflow: hidden;
+}
+
+.subfield-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: #3b82f6;
+}
+
+.subfield-icon {
+    font-size: 2rem;
+    color: #3b82f6;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.subfield-card h4 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.subfield-details {
+    font-size: 0.9rem;
+}
+
+.job-titles {
+    margin-bottom: 1rem;
+}
+
+.job-titles strong {
+    color: #374151;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.job-titles ul {
+    list-style: none;
+    padding: 0;
+}
+
+.job-titles li {
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+    font-size: 0.85rem;
+}
+
+.skills strong {
+    color: #374151;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.skill-tag {
+    background: #e5e7eb;
+    color: #374151;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.card-arrow {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: #9ca3af;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.subfield-card:hover .card-arrow {
+    color: #3b82f6;
+    transform: translateX(2px);
+}
+
+/* Footer */
+.footer {
+    background: #1f2937;
+    color: white;
+    padding: 3rem 0;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+}
+
+.footer-section h4 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-section a {
+    color: #d1d5db;
+    text-decoration: none;
+}
+
+.footer-section a:hover {
+    color: white;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-icons i {
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.social-icons i:hover {
+    color: #3b82f6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
+    }
+    
+    .fields-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .subfields-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .nav-links {
+        gap: 1rem;
+    }
+}
+</style>
+
+{% endblock %}
