@@ -1,11 +1,13 @@
+import sys
 import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import django
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djangophase1.settings')
 django.setup()
 
 from django.shortcuts import render
-from .models import Field, Subfield, Skill, JobExample, LearningResource, RealWorldProject
+from careerpath.models import Field, Subfield, Skill, JobExample, LearningResource, RealWorldProject
 
 fields = [
     {
@@ -214,19 +216,20 @@ for field_data in fields:
     field, _ = Field.objects.get_or_create(name=field_data['name'])  # noqa
 
     for subfield_data in field_data['subfields']:
-        subfield, _ = Subfield.objects.get_or_create(name=subfield_data['name'])  # noqa
-        field.subfields.add(subfield)
+        subfield, _ = Subfield.objects.get_or_create(name=subfield_data['name'], field=field)  # noqa
+        # field.subfields.add(subfield)  # No longer needed
 
         for job_data in field_data.get('jobs', []):
             job = JobExample.objects.create(  # noqa
                 title=job_data['title'],
                 description=job_data['description'],
-                career_path=subfield
+                field=field,
+                subfield=subfield
             )
 
             for skill_name in job_data['key_skills']:
                 skill, _ = Skill.objects.get_or_create(name=skill_name)  # noqa
-                job.skills.add(skill)
+                job.key_skills.add(skill)
 
             for resource in job_data['learning_resources']:
                 LearningResource.objects.create(  # noqa
@@ -242,9 +245,3 @@ for field_data in fields:
                 )
 
 print("Data loaded successfully")
-from django.shortcuts import render
-from .models import Field
-
-def careerpaths_overview(request):
-    fields = Field.objects.prefetch_related('subfields').all()
-    return render(request, 'careerpaths/careerpaths.html', {'fields': fields})

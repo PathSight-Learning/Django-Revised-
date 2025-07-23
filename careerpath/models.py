@@ -18,6 +18,7 @@ class Skill(models.Model):
 
 class JobExample(models.Model):
     field = models.ForeignKey(Field, related_name='jobs', on_delete=models.CASCADE)
+    subfield = models.ForeignKey(Subfield, related_name='job_examples', on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=255)
     description = models.TextField()
     key_skills = models.ManyToManyField(Skill, related_name='job_examples')
